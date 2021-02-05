@@ -2,14 +2,16 @@ defmodule Pinglix.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :pinglix,
-     description: description(),
-     package: package(),
-     version:  "1.1.4",
-     elixir: "~> 1.6",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :pinglix,
+      description: description(),
+      package: package(),
+      version: "1.2.0",
+      elixir: "~> 1.6",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -29,7 +31,8 @@ defmodule Pinglix.Mixfile do
       maintainers: ["Paul Van de Vreede"],
       links: %{"Github" => "https://github.com/pvdvreede/pinglix"},
       licenses: ["MIT License"],
-      files: ["lib", "mix.exs", "README.md", "LICENSE"]]
+      files: ["lib", "mix.exs", "README.md", "LICENSE"]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -43,10 +46,10 @@ defmodule Pinglix.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:ex_doc, "~> 0.20", only: :dev},
-      {:dialyxir, "~> 0.5", only: :dev},
-      {:timex, "~> 3.0"},
-      {:poison, "~> 3.1.0"},
-      {:plug, "~> 1.0"}]
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.23", only: :dev},
+      {:jason, "~> 1.2"},
+      {:plug, "~> 1.0"}
+    ]
   end
 end

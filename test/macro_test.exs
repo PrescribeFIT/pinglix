@@ -5,7 +5,7 @@ defmodule MacroTest do
   test "ok checks return ok status" do
     conn = conn(:get, "/_ping")
     conn = MyOkPing.call(conn, [])
-    %{"status" => status, "ok_with_message" => msg} = Poison.decode!(conn.resp_body)
+    %{"status" => status, "ok_with_message" => msg} = Jason.decode!(conn.resp_body)
     assert conn.status == 200
     assert status == "ok"
     assert msg == "All is well"
@@ -14,7 +14,10 @@ defmodule MacroTest do
   test "failures return 503 and failures" do
     conn = conn(:get, "/_ping")
     conn = MyFailurePing.call(conn, [])
-    %{"status" => status, "failures" => fails, "always_fail" => message} = Poison.decode!(conn.resp_body)
+
+    %{"status" => status, "failures" => fails, "always_fail" => message} =
+      Jason.decode!(conn.resp_body)
+
     assert conn.status == 503
     assert status == "failures"
     assert fails == ["always_fail"]
@@ -24,12 +27,11 @@ defmodule MacroTest do
   test "timeouts return 503 and failures" do
     conn = conn(:get, "/_ping")
     conn = MyTimeoutPing.call(conn, timeout: 400)
-    %{"status" => status, "timeouts" => timeouts} = Poison.decode!(conn.resp_body)
+    %{"status" => status, "timeouts" => timeouts} = Jason.decode!(conn.resp_body)
     assert conn.status == 503
-    assert status      == "failures"
-    assert timeouts    == ["never_ever_happening"]
+    assert status == "failures"
+    assert timeouts == ["never_ever_happening"]
   end
-
 
   test "ok check returns ok" do
     assert MyMixedPing.run_check(:always_ok) == {:ok, :always_ok}
@@ -47,5 +49,3 @@ defmodule MacroTest do
     assert MyMixedPing.run_check(:always_error) == {:fail, :always_error, "Check failed."}
   end
 end
-
-

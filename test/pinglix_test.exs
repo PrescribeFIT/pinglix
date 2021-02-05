@@ -35,7 +35,7 @@ defmodule PinglixTest do
   end
 
   test "application returns now and status keys", %{conn: conn} do
-    %{"status" => status, "now" => _now} = Poison.decode!(conn.resp_body)
+    %{"status" => status, "now" => _now} = Jason.decode!(conn.resp_body)
     assert status == "ok"
   end
 
@@ -43,8 +43,8 @@ defmodule PinglixTest do
     :timer.sleep(1000)
     second_conn = conn(:get, "/_ping")
     second_conn = MySimplePing.call(second_conn, @opts)
-    %{"now" => first_now} = Poison.decode!(conn.resp_body)
-    %{"now" => second_now} = Poison.decode!(second_conn.resp_body)
+    %{"now" => first_now} = Jason.decode!(conn.resp_body)
+    %{"now" => second_now} = Jason.decode!(second_conn.resp_body)
     refute first_now == second_now
   end
 end

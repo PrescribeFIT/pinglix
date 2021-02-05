@@ -1,7 +1,11 @@
 defmodule Pinglix.Status do
-  use Timex
-
-  defstruct status: "ok", now: nil, passed: [], failures: [], timeouts: [], http_code: 200, checks: []
+  defstruct status: "ok",
+            now: nil,
+            passed: [],
+            failures: [],
+            timeouts: [],
+            http_code: 200,
+            checks: []
 
   def build(checks \\ []) do
     %__MODULE__{checks: checks}
@@ -26,7 +30,7 @@ defmodule Pinglix.Status do
   end
 
   def set_current_time(status) do
-    %__MODULE__{status | now: Timex.Duration.now(:seconds)}
+    %__MODULE__{status | now: System.os_time(:second)}
   end
 
   def to_struct(status) do
@@ -58,8 +62,8 @@ defmodule Pinglix.Status do
   end
 end
 
-defimpl Poison.Encoder, for: Pinglix.Status do
+defimpl Jason.Encoder, for: Pinglix.Status do
   def encode(status, opts) do
-    Poison.Encoder.encode(Pinglix.Status.to_struct(status), opts)
+    Jason.Encoder.encode(Pinglix.Status.to_struct(status), opts)
   end
 end
